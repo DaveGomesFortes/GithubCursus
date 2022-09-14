@@ -1,14 +1,19 @@
-$ifName = Read-Host "Vul de naam in van je repository"
-$switchVisibility = Read-Host "Wilt u een private of public repository (typ 'y' voor private of 'n' voor public)"
-$switchDescription = Read-Host "Typ hier de description (typ niks als u geen description wilt)"
+$ifName = Read-Host "Geef de repository een naam"
+$switchVisibility = Read-Host "Selecteer een private of public repository ('y' voor private,'n' voor public)"
+$switchDescription = Read-Host "Geef hier de description (optioneel)"
 $description = "--description"
 
+if ($switchDescription -eq "") {
+    $description = ""
+}
+
 if ("" -eq $ifName) {
-    Write-Output "Error: Geen naam ingevuld. Naam is verplicht"
-    Write-Output "Powershell sluit af in 7 seconden"
+    Write-Error "Geen naam ingevuld. Naam is verplicht"
+    Write-Error "Powershell sluit af in 7 seconden"
     Start-Sleep -Seconds 7
     exit
-}else {
+}
+else {
     $flagName = $ifName
 }
 
@@ -37,12 +42,7 @@ switch ($switchVisibility) {
     Public {$flagVisibility = "public"}
     PRIVATE {$flagVisibility = "private"}
     PUBLIC {$flagVisibility = "public"}
-    default {"Error: Verkeerde private of public input (typ 'y' voor private of 'n' voor public)"; "Powershell sluit af in 7 seconden"; Start-Sleep -Seconds 7; exit}
+    default {Write-Error "Verkeerde private of public input ('y' voor private 'n' voor public)"; Write-Error "Powershell sluit af in 7 seconden"; Start-Sleep -Seconds 7; exit}
 }
 
-switch ($switchDescription) {
-    "" {$flagDescription = ""; $description = $null}
-    Default {$flagDescription = $switchDescription}
-}
-
-gh repo create $flagName --$flagVisibility $description $flagDescription
+gh repo create $flagName --$flagVisibility $description $switchDescription

@@ -19,3 +19,4 @@ Get-Service ssh-agent | Set-Service -StartupType Automatic
 Start-Service ssh-agent
 Get-Service ssh-agent
 ssh-add C:\Users\$env:UserName\.ssh\id_ed25519
+Get-Content C:\Users\$env:UserName\.ssh\id_ed25519.pub | Set-Clipboard

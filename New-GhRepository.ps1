@@ -1,48 +1,24 @@
-$ifName = Read-Host "Geef de repository een naam"
-$switchVisibility = Read-Host "Selecteer een private of public repository ('y' voor private,'n' voor public)"
-$switchDescription = Read-Host "Geef hier de description (optioneel)"
-$description = "--description"
+$IfName = Read-Host "Geef de repository een naam"
+$SwitchVisibility = Read-Host "Selecteer een private of public repository ('y' voor private,'n' voor public)"
+$SwitchDescription = Read-Host "Geef hier de description (optioneel)"
+$Description = "--description"
 
-if ($switchDescription -eq "") {
-    $description = ""
+if ($SwitchDescription -eq "") {
+    $Description = ""
 }
 
-if ("" -eq $ifName) {
+if ("" -eq $IfName) {
     Write-Error "Geen naam ingevuld. Naam is verplicht"
-    Write-Error "Powershell sluit af in 7 seconden"
-    Start-Sleep -Seconds 7
     exit
 }
 else {
-    $flagName = $ifName
+    $FlagName = $IfName
 }
 
-switch ($switchVisibility) {
-    y {$flagVisibility = "private"}
-    n {$flagVisibility = "public"}
-    Y {$flagVisibility = "private"}
-    N {$flagVisibility = "public"}
-    yes {$flagVisibility = "private"}
-    no {$flagVisibility = "public"}
-    Yes {$flagVisibility = "private"}
-    No {$flagVisibility = "public"}
-    YES {$flagVisibility = "private"}
-    NO {$flagVisibility = "public"}
-    j {$flagVisibility = "private"}
-    J {$flagVisibility = "private"}
-    ja {$flagVisibility = "private"}
-    nee {$flagVisibility = "public"}
-    Ja {$flagVisibility = "private"}
-    Nee {$flagVisibility = "public"}
-    JA {$flagVisibility = "private"}
-    NEE {$flagVisibility = "public"}
-    private {$flagVisibility = "private"}
-    public {$flagVisibility = "public"}
-    Private {$flagVisibility = "private"}
-    Public {$flagVisibility = "public"}
-    PRIVATE {$flagVisibility = "private"}
-    PUBLIC {$flagVisibility = "public"}
-    default {Write-Error "Verkeerde private of public input ('y' voor private 'n' voor public)"; Write-Error "Powershell sluit af in 7 seconden"; Start-Sleep -Seconds 7; exit}
+switch ($SwitchVisibility) {
+    { @("y","Y","yes","Yes","YES","j","J","ja","Ja","JA","private","Private","PRIVATE") -contains $_} {$FlagVisibility = "private"}
+    { @("n","N","no","No","NO","nee","Nee","NEE","public","Public","PUBLIC") -contains $_} {$FlagVisibility = "public"}
+    default {Write-Error "Verkeerde private of public input ('y' voor private 'n' voor public)"; exit}
 }
 
-gh repo create $flagName --$flagVisibility $description $switchDescription
+gh repo create $FlagName --$FlagVisibility $Description $SwitchDescription
